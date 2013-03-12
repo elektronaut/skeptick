@@ -57,7 +57,7 @@ module Skeptick
       def build_parts
         reset
         DslContext.new(self).instance_eval(&@obj)
-        [*@prepends, @image, *@appends].compact
+        [@prepends, @image, @appends].flatten.compact
       end
 
       def reset

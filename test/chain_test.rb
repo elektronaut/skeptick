@@ -1,4 +1,4 @@
-require_relative 'test_helper'
+require File.join(File.dirname(__FILE__), 'test_helper')
 
 class ChainTest < Skeptick::TestCase
   include Skeptick
@@ -17,7 +17,7 @@ class ChainTest < Skeptick::TestCase
   end
 
   def test_chaining_two_converts_to_destination
-    cmd = chain(to: 'baz') do
+    cmd = chain(:to => 'baz') do
       convert('foo')
       convert(:pipe)
     end
@@ -26,9 +26,9 @@ class ChainTest < Skeptick::TestCase
   end
 
   def test_last_convert_destination_prevails
-    cmd = chain(to: 'baz') do
+    cmd = chain(:to => 'baz') do
       convert('foo')
-      convert(:pipe, to: 'qux')
+      convert(:pipe, :to => 'qux')
     end
 
     assert_equal 'convert foo miff:- | convert miff:- qux', cmd.to_s
@@ -65,7 +65,7 @@ class ChainTest < Skeptick::TestCase
   end
 
   def test_complex_piping_case
-    cmd = chain(to: 'foo') do
+    cmd = chain(:to => 'foo') do
       convert('resized_design', 'mask') do
         set '-geometry', '-left-top'
         set '-brightness-contrast',  '-12x20'

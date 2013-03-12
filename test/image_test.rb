@@ -1,4 +1,4 @@
-require_relative 'test_helper'
+require File.join(File.dirname(__FILE__), 'test_helper')
 
 class ImageTest < Skeptick::TestCase
   include Skeptick
@@ -127,7 +127,7 @@ class ImageTest < Skeptick::TestCase
   end
 
   def test_convert_as_image_object
-    sample = convert('foo', to: 'bar') do
+    sample = convert('foo', :to => 'bar') do
       set :baz
     end
 

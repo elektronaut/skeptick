@@ -73,7 +73,7 @@ module Skeptick
       @objects = []
       DslContext.new(self).instance_eval(&@block) if @block
       wrap
-      [@beginning, *@prepends, *@args, *@objects, *@appends, @ending].compact
+      [@beginning, @prepends, @args, @objects, @appends, @ending].flatten.compact
     end
 
     def to_s

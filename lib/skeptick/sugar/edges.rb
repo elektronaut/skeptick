@@ -20,7 +20,7 @@ module Skeptick
         border = if width && height
           "roundrectangle 1,1 #{width},#{height} #{radius},#{radius}"
         else
-          convert(image, to: 'info:') do
+          convert(image, :to => 'info:') do
             format "roundrectangle 1,1 %[fx:w], %[fx:h] #{radius},#{radius}"
           end.execute.strip
         end

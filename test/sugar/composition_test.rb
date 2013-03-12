@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require File.join(File.dirname(__FILE__), '../test_helper')
 require 'skeptick/sugar/composition'
 
 # DISCLAIMER
@@ -24,17 +24,17 @@ class CompositionTest < Skeptick::TestCase
   end
 
   def test_compose_with_output
-    cmd = compose(:over, to: 'foo')
+    cmd = compose(:over, :to => 'foo')
     assert_equal 'convert -compose over -composite foo', cmd.to_s
   end
 
   def test_compose_with_input_and_output
-    cmd = compose(:over, 'foo', to: 'bar')
+    cmd = compose(:over, 'foo', :to => 'bar')
     assert_equal 'convert foo -compose over -composite bar', cmd.to_s
   end
 
   def test_compose_with_2_inputs_and_output
-    cmd = compose(:over, 'foo', 'bar', to: 'baz')
+    cmd = compose(:over, 'foo', 'bar', :to => 'baz')
     assert_equal 'convert foo bar -compose over -composite baz', cmd.to_s
   end
 
@@ -44,7 +44,7 @@ class CompositionTest < Skeptick::TestCase
   end
 
   def test_compose_with_input_in_block_and_output
-    cmd = compose(:over, to: 'bar') { image 'foo' }
+    cmd = compose(:over, :to => 'bar') { image 'foo' }
     assert_equal 'convert foo -compose over -composite bar', cmd.to_s
   end
 
@@ -54,7 +54,7 @@ class CompositionTest < Skeptick::TestCase
   end
 
   def test_compose_with_2_input_styles_and_output
-    cmd = compose(:over, 'foo', to: 'baz') { image 'bar' }
+    cmd = compose(:over, 'foo', :to => 'baz') { image 'bar' }
     assert_equal 'convert foo bar -compose over -composite baz', cmd.to_s
   end
 
@@ -80,7 +80,7 @@ class CompositionTest < Skeptick::TestCase
   end
 
   def test_compose_with_ops_inputs_and_output
-    cmd = compose(:over, 'foo', 'bar', to: 'baz') do
+    cmd = compose(:over, 'foo', 'bar', :to => 'baz') do
       image 'qux'
       with '+quux'
       with '-corge', 'grault'
@@ -91,7 +91,7 @@ class CompositionTest < Skeptick::TestCase
   end
 
   def test_nested_compose
-    cmd = compose(:over, to: 'baz') do
+    cmd = compose(:over, :to => 'baz') do
       compose(:multiply, 'foo') { with 'bar' }
     end
 
@@ -100,8 +100,8 @@ class CompositionTest < Skeptick::TestCase
   end
 
   def test_nested_compose_ignores_output
-    cmd = compose(:over, to: 'baz') do
-      compose(:multiply, 'foo', to: 'nowhere') { with 'bar' }
+    cmd = compose(:over, :to => 'baz') do
+      compose(:multiply, 'foo', :to => 'nowhere') { with 'bar' }
     end
 
     assert_equal 'convert ( foo bar -compose multiply -composite ) -compose ' +
@@ -109,7 +109,7 @@ class CompositionTest < Skeptick::TestCase
   end
 
   def test_multi_image_nested_compose
-    cmd = compose(:over, 'foo', to: 'bar') do
+    cmd = compose(:over, 'foo', :to => 'bar') do
       compose(:multiply, 'qux') do
         with '+asdf'
         with '+fdsa'
@@ -129,7 +129,7 @@ class CompositionTest < Skeptick::TestCase
       with '+fdsa'
     end
 
-    cmd = compose(:multiply, 'foo', to: 'bar') do
+    cmd = compose(:multiply, 'foo', :to => 'bar') do
       image complex_image
       image 'bleh'
       with '-resize'
@@ -140,8 +140,8 @@ class CompositionTest < Skeptick::TestCase
   end
 
   def test_compose_double_nesting_with_composition
-    complex_image = compose('foo', to: 'nowhere') do
-      compose('bar', to: 'nowhere') do
+    complex_image = compose('foo', :to => 'nowhere') do
+      compose('bar', :to => 'nowhere') do
         compose('baz') do
           image 'image1'
           with '-option', 'qux'

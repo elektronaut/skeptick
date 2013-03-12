@@ -1,4 +1,4 @@
-require_relative 'test_helper'
+require File.join(File.dirname(__FILE__), 'test_helper')
 
 # DISCLAIMER
 # These tests are not examples of proper usage of ImageMagick.
@@ -43,17 +43,17 @@ class ConvertTest < Skeptick::TestCase
   end
 
   def test_convert_with_output
-    cmd = convert(to: 'foo')
+    cmd = convert(:to => 'foo')
     assert_equal 'convert foo', cmd.to_s
   end
 
   def test_convert_with_input_and_output
-    cmd =  convert('foo', to: 'bar')
+    cmd =  convert('foo', :to => 'bar')
     assert_equal 'convert foo bar', cmd.to_s
   end
 
   def test_convert_with_2_inputs_and_output
-    cmd = convert('foo', 'bar', to: 'baz')
+    cmd = convert('foo', 'bar', :to => 'baz')
     assert_equal 'convert foo bar baz', cmd.to_s
   end
 
@@ -63,7 +63,7 @@ class ConvertTest < Skeptick::TestCase
   end
 
   def test_convert_with_input_in_block_and_output
-    cmd = convert(to: 'bar') { image 'foo' }
+    cmd = convert(:to => 'bar') { image 'foo' }
     assert_equal 'convert foo bar', cmd.to_s
   end
 
@@ -73,7 +73,7 @@ class ConvertTest < Skeptick::TestCase
   end
 
   def test_convert_with_2_input_styles_and_output
-    cmd = convert('foo', to: 'baz') { image 'bar' }
+    cmd = convert('foo', :to => 'baz') { image 'bar' }
     assert_equal 'convert foo bar baz', cmd.to_s
   end
 
@@ -98,7 +98,7 @@ class ConvertTest < Skeptick::TestCase
   end
 
   def test_convert_with_ops_inputs_and_output
-    cmd = convert('foo', 'bar', to: 'baz') do
+    cmd = convert('foo', 'bar', :to => 'baz') do
       image 'qux'
       with '+quux'
       with '-corge', 'grault'
@@ -108,7 +108,7 @@ class ConvertTest < Skeptick::TestCase
   end
 
   def test_nested_convert
-    cmd = convert(to: 'baz') do
+    cmd = convert(:to => 'baz') do
       convert('foo') { with 'bar' }
     end
 
@@ -116,15 +116,15 @@ class ConvertTest < Skeptick::TestCase
   end
 
   def test_nested_convert_ignores_output
-    cmd = convert(to: 'baz') do
-      convert('foo', to: 'nowhere') { with 'bar' }
+    cmd = convert(:to => 'baz') do
+      convert('foo', :to => 'nowhere') { with 'bar' }
     end
 
     assert_equal 'convert ( foo bar ) baz', cmd.to_s
   end
 
   def test_multi_image_nested_convert
-    cmd = convert('foo', to: 'bar') do
+    cmd = convert('foo', :to => 'bar') do
       convert('qux') do
         with '+asdf'
         with '+fdsa'
@@ -143,7 +143,7 @@ class ConvertTest < Skeptick::TestCase
       with '+fdsa'
     end
 
-    cmd = convert('foo', to: 'bar') do
+    cmd = convert('foo', :to => 'bar') do
       image complex_image
       image 'bleh'
       with '-resize'
@@ -153,8 +153,8 @@ class ConvertTest < Skeptick::TestCase
   end
 
   def test_convert_double_nesting_with_composition
-    complex_image = convert('foo', to: 'nowhere') do
-      convert('bar', to: 'nowhere') do
+    complex_image = convert('foo', :to => 'nowhere') do
+      convert('bar', :to => 'nowhere') do
         convert('baz') do
           image 'image1'
           with '-option', 'qux'
